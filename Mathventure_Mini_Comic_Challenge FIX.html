@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mathventure - Mini Comic Challenge</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #222;
+}
+
+header {
+    background-color: white;
+    text-align: center;
+    padding: 25px 15px;
+    border-bottom: 3px solid #222;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 40px;
+    letter-spacing: 2px;
+}
+
+header h2 {
+    margin: 8px 0;
+    font-size: 22px;
+}
+
+header p {
+    margin: 5px 0;
+    font-size: 18px;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: 30px auto;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+
+.comic-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+}
+
+.mission {
+    background-color: white;
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+.mission-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.question {
+    font-size: 19px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.answer {
+    width: 80%;
+    max-width: 500px;
+    padding: 14px;
+    font-size: 18px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.check {
+    display: block;
+    margin: 15px auto;
+    padding: 12px 28px;
+    font-size: 17px;
+    font-weight: bold;
+    background-color: #222;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.check:hover { background-color: #555; }
+
+.feedback {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 17px;
+    line-height: 1.5;
+    display: none;
+}
+
+.feedback.correct {
+    display: block;
+    background-color: #e0f5e0;
+    border: 2px solid #4caf50;
+}
+
+.feedback.wrong {
+    display: block;
+    background-color: #ffe1e1;
+    border: 2px solid #e53935;
+}
+
+.hint-button {
+    background: none;
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.hint {
+    display: none;
+    margin-top: 12px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0;
+}
+
+.navigation button {
+    padding: 12px 22px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    background-color: #222;
+    color: white;
+    cursor: pointer;
+}
+
+.navigation button:hover { background-color: #555; }
+
+.navigation button:disabled {
+    background-color: #bbb;
+    cursor: not-allowed;
+}
+
+.page-number {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.finish {
+    display: none;
+    background-color: white;
+    padding: 30px;
+    margin-top: 25px;
+    text-align: center;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.finish h2 { font-size: 30px; }
+
+@media (max-width: 600px) {
+    header h1 { font-size: 30px; }
+    header h2 { font-size: 18px; }
+    .question { font-size: 17px; }
+    .answer { width: 100%; }
+    .navigation button {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>MATHVENTURE</h1>
+    <h2>Mini Comic Challenge</h2>
+    <p>Wahana Bianglala - Level 3</p>
+</header>
+
+<div class="container">
+
+    <!-- HALAMAN 1 -->
+    <div class="page active" id="page1">
+
+        <img src="komik1.jpg" class="comic-image" alt="Komik halaman 1">
+
+        <div class="mission">
+            <div class="mission-title">🎯 MISI 1</div>
+
+            <div class="question">
+                Miniatur Bianglala memiliki tinggi <b>2 meter</b>
+                dan diameter <b>3 meter</b>.
+                <br><br>
+                Bianglala sebenarnya memiliki tinggi <b>10 meter</b>.
+                <br><br>
+                Berapakah diameter Bianglala sebenarnya?
+                <br><br>
+                <b>Tuliskan jawabanmu dalam meter.</b>
+            </div>
+
+            <input type="text" id="answer1" class="answer"
+                   placeholder="Masukkan jawaban">
+
+            <button class="check" onclick="checkAnswer1()">
+                ✓ Cek Jawaban
+            </button>
+
+            <div id="feedback1" class="feedback"></div>
+
+            <button class="hint-button" onclick="showHint(1)">
+                💡 Lihat Petunjuk
+            </button>
+
+            <div id="hint1" class="hint">
+                Tentukan faktor skala terlebih dahulu.
+                <br><br>
+                Tinggi sebenarnya ÷ tinggi miniatur
+                <br>
+                10 ÷ 2 = ?
+                <br><br>
+                Setelah mendapatkan faktor skala,
+                gunakan untuk mencari diameter.
+            </div>
+        </div>
+    </div>
+
+    <!-- HALAMAN 2 -->
+    <div class="page" id="page2">
+
+        <img src="komik2.jpg" class="comic-image" alt="Komik halaman 2">
+
+        <div class="mission">
+            <div class="mission-title">🎯 MISI 2</div>
+
+            <div class="question">
+                Pada gambar, panjang kabin Bianglala adalah
+                <b>4 cm</b> dan tingginya <b>3 cm</b>.
+                <br><br>
+                Jika panjang kabin sebenarnya adalah
+                <b>8 meter</b>, berapakah tinggi kabin sebenarnya?
+                <br><br>
+                <b>Tuliskan jawabanmu dalam meter.</b>
+            </div>
+
+            <input type="text" id="answer2" class="answer"
+                   placeholder="Masukkan jawaban">
+
+            <button class="check" onclick="checkAnswer2()">
+                ✓ Cek Jawaban
+            </button>
+
+            <div id="feedback2" class="feedback"></div>
+
+            <button class="hint-button" onclick="showHint(2)">
+                💡 Lihat Petunjuk
+            </button>
+
+            <div id="hint2" class="hint">
+                Cari faktor skala dari panjang kabin.
+                <br><br>
+                8 ÷ 4 = ?
+                <br><br>
+                Setelah itu kalikan tinggi kabin
+                pada gambar dengan faktor skala.
+            </div>
+        </div>
+    </div>
+
+    <!-- HALAMAN 3 -->
+    <div class="page" id="page3">
+
+        <img src="komik3.jpg" class="comic-image" alt="Komik halaman 3">
+
+        <div class="mission">
+            <div class="mission-title">🎯 MISI 3</div>
+
+            <div class="question">
+                Sebuah tongkat memiliki panjang <b>2 meter</b>
+                dan bayangannya <b>3 meter</b>.
+                <br><br>
+                Jika panjang bayangan Bianglala <b>15 meter</b>,
+                berapakah tinggi Bianglala sesungguhnya?
+                <br><br>
+                <b>Tuliskan jawabanmu dalam meter.</b>
+            </div>
+
+            <input type="text" id="answer3" class="answer"
+                   placeholder="Masukkan jawaban">
+
+            <button class="check" onclick="checkAnswer3()">
+                ✓ Cek Jawaban
+            </button>
+
+            <div id="feedback3" class="feedback"></div>
+
+            <button class="hint-button" onclick="showHint(3)">
+                💡 Lihat Petunjuk
+            </button>
+
+            <div id="hint3" class="hint">
+                Gunakan perbandingan senilai.
+                <br><br>
+                2 : 3 = x : 15
+            </div>
+        </div>
+    </div>
+
+    <!-- PESAN SELESAI -->
+    <div id="finish" class="finish">
+        <h2>🏆 MISSION COMPLETE!</h2>
+        <p>
+            Hebat! Kamu telah menyelesaikan semua misi Mathventure.
+        </p>
+        <p>
+            Kamu sudah menggunakan strategi,
+            menemukan informasi penting,
+            dan menyelesaikan tantangan matematika.
+        </p>
+    </div>
+
+    <!-- NAVIGASI -->
+    <div class="navigation">
+
+        <button id="prevButton" type="button" onclick="previousPage()" disabled>
+            ← Sebelumnya
+        </button>
+
+        <div class="page-number">
+            Halaman <span id="currentPage">1</span> dari 3
+        </div>
+
+        <button id="nextButton" type="button" onclick="nextPage()">
+            Berikutnya →
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+/* ==========================
+   CEK MISI 1
+========================== */
+
+function checkAnswer1() {
+
+    const answer = document.getElementById("answer1").value.trim();
+    const feedback = document.getElementById("feedback1");
+    const number = parseFloat(answer);
+
+    if (number === 15) {
+
+        feedback.className = "feedback correct";
+
+        feedback.innerHTML =
+            "🎉 <b>Jawaban benar!</b><br><br>" +
+            "Faktor skala = 10 ÷ 2 = 5." +
+            "<br>" +
+            "Diameter sebenarnya = 3 × 5 = " +
+            "<b>15 meter</b>.";
+
+    } else {
+
+        feedback.className = "feedback wrong";
+
+        feedback.innerHTML =
+            "❌ <b>Belum tepat.</b><br>" +
+            "Coba tentukan faktor skala " +
+            "antara miniatur dan ukuran sebenarnya.";
+    }
+}
+
+
+/* ==========================
+   CEK MISI 2
+========================== */
+
+function checkAnswer2() {
+
+    const answer = document.getElementById("answer2").value.trim();
+    const feedback = document.getElementById("feedback2");
+    const number = parseFloat(answer);
+
+    if (number === 6) {
+
+        feedback.className = "feedback correct";
+
+        feedback.innerHTML =
+            "🎉 <b>Jawaban benar!</b><br><br>" +
+            "Faktor skala = 8 ÷ 4 = 2." +
+            "<br>" +
+            "Tinggi sebenarnya = 3 × 2 = " +
+            "<b>6 meter</b>.";
+
+    } else {
+
+        feedback.className = "feedback wrong";
+
+        feedback.innerHTML =
+            "❌ <b>Belum tepat.</b><br>" +
+            "Cari faktor skala dari panjang kabin " +
+            "terlebih dahulu.";
+    }
+}
+
+
+/* ==========================
+   CEK MISI 3
+========================== */
+
+function checkAnswer3() {
+
+    const answer = document.getElementById("answer3").value.trim();
+    const feedback = document.getElementById("feedback3");
+    const number = parseFloat(answer);
+
+    if (number === 10) {
+
+        feedback.className = "feedback correct";
+
+        feedback.innerHTML =
+            "🎉 <b>Jawaban benar!</b><br><br>" +
+            "Tinggi Bianglala sesungguhnya " +
+            "<b>10 meter</b>." +
+            "<br><br>" +
+            "Kamu berhasil menyelesaikan Misi 3!";
+
+        document.getElementById("finish").style.display = "block";
+
+    } else {
+
+        feedback.className = "feedback wrong";
+
+        feedback.innerHTML =
+            "❌ <b>Belum tepat.</b><br>" +
+            "Perhatikan hubungan antara " +
+            "tinggi sebenarnya dan tinggi bayangan.";
+    }
+}
+
+
+/* ==========================
+   PETUNJUK
+========================== */
+
+function showHint(number) {
+
+    const hint = document.getElementById("hint" + number);
+
+    if (hint.style.display === "block") {
+        hint.style.display = "none";
+    } else {
+        hint.style.display = "block";
+    }
+}
+
+
+/* ==========================
+   NAVIGASI HALAMAN
+========================== */
+
+let currentPage = 1;
+
+function nextPage() {
+    if (currentPage < 3) {
+        currentPage = currentPage + 1;
+        showPage(currentPage);
+    }
+}
+
+function previousPage() {
+    if (currentPage > 1) {
+        currentPage = currentPage - 1;
+        showPage(currentPage);
+    }
+}
+
+function showPage(pageNumber) {
+
+    // Sembunyikan semua halaman
+    document.querySelectorAll(".page").forEach(function(page) {
+        page.classList.remove("active");
+    });
+
+    // Tampilkan halaman yang dipilih
+    document.getElementById("page" + pageNumber).classList.add("active");
+
+    // Update nomor halaman
+    document.getElementById("currentPage").textContent = pageNumber;
+
+    // Tombol SEBELUMNYA
+    if (pageNumber === 1) {
+        document.getElementById("prevButton").disabled = true;
+    } else {
+        document.getElementById("prevButton").disabled = false;
+    }
+
+    // Tombol BERIKUTNYA
+    if (pageNumber === 3) {
+        document.getElementById("nextButton").disabled = true;
+    } else {
+        document.getElementById("nextButton").disabled = false;
+    }
+
+    window.scrollTo(0, 0);
+}
+
+// Pastikan halaman pertama siap saat dibuka
+showPage(1);
+
+
+</script>
+
+</body>
+</html>
